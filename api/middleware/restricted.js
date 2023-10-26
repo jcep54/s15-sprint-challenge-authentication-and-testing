@@ -9,6 +9,9 @@ module.exports = (req, res, next) => {
     jwt.verify(token,'hush', (err, decodedToken) =>{
       if(err){
         next({message: 'token invalid'})
+      }else{
+        req.decodedJWT = decodedToken
+        next()
       }
     } )
   }else 
