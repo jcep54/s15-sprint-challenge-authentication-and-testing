@@ -42,13 +42,13 @@ router.post('/register', async (req, res, next) => {
   */
 });
 
-router.post('/login', (req, res,next) => {
+router.post('/login', async (req, res,next) => {
   try{
     const {username, password} = req.body
     if(!username || !password){
       next({status: 400, message:'username and password required'})
     }
-    const user = Users.getUser(username)
+    const user = await Users.getUser(username)
     if (user && bcrypt.compareSync(password, user.password)){
       const token = buildToken(user)
       res.json({message:`welcome, ${username}`, token})
