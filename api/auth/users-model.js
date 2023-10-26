@@ -7,6 +7,7 @@ async function add(user_data) {
 }
 async function getUser(user_id){
     const user = await db('users').where(user_id).first()
+    console.log(user)
     return user
 }
 
