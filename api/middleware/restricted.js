@@ -1,5 +1,10 @@
 module.exports = (req, res, next) => {
-  next();
+  const token = req.headers.authorization
+
+  if(token){
+
+  }else 
+    next({message:'token required'})
   /*
     IMPLEMENT
 
