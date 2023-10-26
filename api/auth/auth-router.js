@@ -42,7 +42,8 @@ router.post('/register', async (req, res, next) => {
 
 router.post('/login', (req, res) => {
   try{
-    const test = Users.getUser(req)
+    const user = Users.getUser(req)
+    
   }catch(err){
     console.log(err)
   }
