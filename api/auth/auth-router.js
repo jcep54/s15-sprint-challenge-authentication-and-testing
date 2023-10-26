@@ -48,7 +48,7 @@ router.post('/login', async (req, res,next) => {
     if(!username || !password){
       next({status: 400, message:'username and password required'})
     }
-    const user = await Users.getUser(username)
+    const user = await Users.getUser({username})
     if (user && bcrypt.compareSync(password, user.password)){
       const token = buildToken(user)
       res.json({message:`welcome, ${username}`, token})
@@ -84,7 +84,7 @@ router.post('/login', async (req, res,next) => {
 
 function buildToken(user){
   const payload = {
-    id: user.id,
+    subject: user.user_id,
     username: user.username
   }
   const options = {
