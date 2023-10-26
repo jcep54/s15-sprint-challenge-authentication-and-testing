@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const Users = require('./users-model')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const {} = require('../../jest.config')
 
 router.post('/register', async (req, res, next) => {
   try{
@@ -40,13 +42,20 @@ router.post('/register', async (req, res, next) => {
   */
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res,next) => {
   try{
     const {username, password} = req.body
-    const user = Users.getUser(req)
-    
+    if(!username || !password){
+      next({status: 400, message:'username and password required'})
+    }
+    const user = Users.getUser(username)
+    if (user && bcrypt.compareSync(password, user.password)){
+      const token = buildToken(user)
+      res.json({message:`welcome, ${username}`, token})
+    }else 
+      next({status:401, message:'invalid credentials'})
   }catch(err){
-    console.log(err)
+    next(err)
   }
   /*
     IMPLEMENT
@@ -72,5 +81,16 @@ router.post('/login', (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+function buildToken(user){
+  const payload = {
+    id: user.id,
+    username: user.username
+  }
+  const options = {
+    expiresIn: '1d'
+  }
+  return jwt.sign( payload, 'hush' , options)
+}
 
 module.exports = router;
